@@ -94,18 +94,10 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .pass-visitor .pass-front{background:linear-gradient(145deg,#2a1a10,#1a0f06)}
 .pass-visitor .pass-tier{background:rgba(245,158,11,.15);color:#fcd34d;border:.5px solid rgba(245,158,11,.3)}
 .pass-visitor .pass-logo{color:#fcd34d}
-
-/* ── S5 SCANNER ──
-   Architecture: html5-qrcode runs invisibly off-screen (handles detection).
-   We display our own <video> element piped from the same camera stream.
-   This gives us 100% layout control with no library interference. */
 #s5{background:#050d1a;padding:0;overflow:hidden}
 .scan-wrap{position:relative;width:100%;height:100%}
-/* html5-qrcode detection engine — completely off-screen, invisible */
 #qr-engine{position:absolute;left:-9999px;top:0;width:100vw;height:100vh;opacity:0;pointer-events:none;z-index:-1}
-/* Our own camera feed — full bleed background */
 #scan-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.65}
-/* Scanner frame UI — perfectly centred absolute overlay */
 .scan-ui{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:1.2rem;pointer-events:none;width:100%}
 .scan-frame{width:260px;height:260px;position:relative}
 .scan-frame .c{position:absolute;width:34px;height:34px;border-color:var(--blue2);border-style:solid}
@@ -124,8 +116,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .fallback-row{pointer-events:all;display:flex;gap:8px;margin-top:.5rem}
 .fallback-pill{background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);color:var(--white3);font-size:11px;font-family:var(--sans);padding:5px 13px;border-radius:99px;cursor:pointer;transition:all .15s}
 .fallback-pill:hover{background:rgba(255,255,255,.12);color:var(--white2)}
-
-/* RESULT OVERLAY */
 #result-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(5,13,26,.9);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s ease}
 #result-overlay.visible{opacity:1;pointer-events:all}
 .rcard{background:var(--navy2);border:.5px solid rgba(255,255,255,.1);border-radius:24px;width:400px;max-width:92vw;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.7);transform:scale(.92) translateY(12px);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
@@ -150,11 +140,15 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .ptxt{font-size:12px;color:var(--white2);line-height:1.4}
 .ptxt strong{display:block;font-weight:500;font-size:11px;letter-spacing:.04em}
 .ptxt span{color:var(--white3);font-size:11px}
+.dismiss-ring{position:absolute;bottom:1.2rem;right:1.5rem;width:28px;height:28px}
+.dismiss-ring svg{transform:rotate(-90deg)}
+.dismiss-ring circle{fill:none;stroke:rgba(255,255,255,.15);stroke-width:3}
+.dismiss-ring .progress{stroke:var(--green);stroke-width:3;stroke-dasharray:75.4;stroke-dashoffset:75.4;transition:none}
 .rbadge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:1rem}
 .tier-owner{background:rgba(200,150,58,.2);color:var(--gold2);border:.5px solid rgba(200,150,58,.4)}
 .tier-tenant{background:rgba(34,197,94,.15);color:#86efac;border:.5px solid rgba(34,197,94,.3)}
 .tier-visitor{background:rgba(245,158,11,.15);color:#fcd34d;border:.5px solid rgba(245,158,11,.3)}
-.rcard-foot{padding:1rem 1.5rem 1.5rem;border-top:.5px solid rgba(255,255,255,.08);margin-top:.5rem}
+.rcard-foot{position:relative;padding:1rem 1.5rem 1.5rem;border-top:.5px solid rgba(255,255,255,.08);margin-top:.5rem}
 #dismiss-btn{width:100%;padding:13px;border-radius:12px;border:none;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);background:var(--green);color:white;transition:background .2s}
 #dismiss-btn:hover{background:#16a34a}
 #s6{flex-direction:row;gap:4rem;align-items:center}
@@ -237,9 +231,9 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   <div class="col">
     <h2>Singapore condos still run on plastic.</h2>
     <div class="pain-item"><div class="pain-icon">💳</div><div class="pain-text"><h4>$8–15 per key card, every tenant, every year</h4><p>Replacements, duplicates, move-outs — thousands per condo annually.</p></div></div>
-    <div class="pain-item"><div class="pain-icon">📞</div><div class="pain-text"><h4>Security desk handles all visitor access manually</h4><p>Every delivery, every guest — a phone call, a log book, a guard's time.</p></div></div>
+    <div class="pain-item"><div class="pain-icon">📞</div><div class="pain-text"><h4>Security desk handles all visitor access manually</h4><p>Every delivery, every guest — a phone call, a log book, a guard’s time.</p></div></div>
     <div class="pain-item"><div class="pain-icon">📋</div><div class="pain-text"><h4>No audit trail when an incident happens</h4><p>Who entered? When? Through which gate? Nobody knows without reviewing CCTV.</p></div></div>
-    <div class="pain-item"><div class="pain-icon">🏢</div><div class="pain-text"><h4>Aiphone's IXG is already installed — underutilised</h4><p>The hardware is there. But no software layer connecting it to the resident's phone.</p></div></div>
+    <div class="pain-item"><div class="pain-icon">🏢</div><div class="pain-text"><h4>Aiphone’s IXG is already installed — underutilised</h4><p>The hardware is there. But no software layer connecting it to the resident’s phone.</p></div></div>
   </div>
   <div class="col" style="display:flex;flex-direction:column;gap:16px;align-items:center;max-width:260px">
     <div class="stat-box"><div class="big">300+</div><p>condominiums in Singapore with Aiphone IXG installed</p><div class="big2">0</div><p>of them with digital wallet pass access today</p></div>
@@ -249,7 +243,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 <div class="slide" id="s3">
   <div class="top"><h2>One software layer. No hardware swap.</h2><p style="font-size:13px;color:var(--white3);margin-top:6px">dasecure middleware bridges PassQR to your existing Aiphone IXW-MA relay</p></div>
   <div class="flow">
-    <div class="flow-node"><div class="icon">📱</div><h4>Resident's phone</h4><p>Apple Wallet or Google Wallet. No app to install.</p></div>
+    <div class="flow-node"><div class="icon">📱</div><h4>Resident’s phone</h4><p>Apple Wallet or Google Wallet. No app to install.</p></div>
     <div class="flow-arrow"><div class="line"></div><div class="label">QR scan</div><div class="arrowhead">›</div></div>
     <div class="flow-node"><div class="icon">📷</div><h4>IP QR scanner</h4><p>Mounted at gate. Sends code to middleware via HTTP POST.</p></div>
     <div class="flow-arrow"><div class="line"></div><div class="label">validate + update</div><div class="arrowhead">›</div></div>
@@ -297,26 +291,22 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
       <div class="pass-front">
         <div class="pass-header"><div class="pass-logo">Aiphone Residences</div><div class="pass-tier">Visitor</div></div>
         <div class="pass-name">Yusuf Ibrahim</div><div class="pass-unit">Guest of Unit 12-08 · Today only</div>
-        <div class="pass-qr" id="qr-visitor"></div><div class="pass-code">PASS-GXVKSEQW</div>
+        <div class="pass-qr" id="qr-visitor"></div><div class="pass-code">PASS-YVG57Y5M</div>
       </div>
       <div class="pass-back">
-        <div class="pass-back-row"><span class="pass-back-label">Access window</span><span class="pass-back-val">18 Apr, 2pm–6pm</span></div>
+        <div class="pass-back-row"><span class="pass-back-label">Access window</span><span class="pass-back-val">Demo access</span></div>
         <div class="pass-back-row"><span class="pass-back-label">Entry</span><span class="pass-back-val">Main Gate Only</span></div>
         <div class="pass-back-row"><span class="pass-back-label">Sponsored by</span><span class="pass-back-val">Unit 12-08</span></div>
-        <div class="pass-back-row"><span class="pass-back-label">Max scans</span><span class="pass-back-val">3 uses</span></div>
+        <div class="pass-back-row"><span class="pass-back-label">Valid until</span><span class="pass-back-val">18 Apr 2027</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- S5: html5-qrcode engine hidden off-screen, our video visible -->
 <div class="slide" id="s5" style="padding:0">
   <div class="scan-wrap">
-    <!-- Detection engine — invisible, off-screen -->
     <div id="qr-engine"></div>
-    <!-- Our camera display — full bleed, perfectly controlled -->
     <video id="scan-video" autoplay playsinline muted></video>
-    <!-- Our overlay UI — absolutely centred -->
     <div class="scan-ui">
       <div class="scan-frame">
         <div class="c tl"></div><div class="c tr"></div>
@@ -329,16 +319,15 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
       <div class="fallback-row">
         <button class="fallback-pill" onclick="doScan('PASS-FNEBCPT9')">Owner</button>
         <button class="fallback-pill" onclick="doScan('PASS-DJSQ8X89')">Tenant</button>
-        <button class="fallback-pill" onclick="doScan('PASS-GXVKSEQW')">Visitor</button>
+        <button class="fallback-pill" onclick="doScan('PASS-YVG57Y5M')">Visitor</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- RESULT OVERLAY -->
 <div id="result-overlay">
   <div class="rcard">
-    <div class="rcard-head"><div class="rdot valid"></div><div class="rtitle">✓  Access Granted</div></div>
+    <div class="rcard-head"><div class="rdot valid"></div><div class="rtitle" id="r-title">✓  Access Granted</div></div>
     <div class="rcard-body">
       <div class="rrow"><span class="rlbl">Pass code</span><span class="rval rcode" id="r-code">—</span></div>
       <div class="rrow"><span class="rlbl">Holder</span><span class="rval" id="r-holder">—</span></div>
@@ -355,6 +344,9 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
     <div class="rcard-foot">
       <div class="rbadge" id="r-badge">Owner</div>
       <button id="dismiss-btn" onclick="dismissResult()">Tap to scan next pass</button>
+      <div class="dismiss-ring" id="dismiss-ring" style="display:none">
+        <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="12"/><circle class="progress" id="ring-progress" cx="14" cy="14" r="12"/></svg>
+      </div>
     </div>
   </div>
 </div>
@@ -389,9 +381,9 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
         <div class="gstep done"><div class="gstep-icon">✓</div><div class="gstep-txt">IXW-MA relay pulsed → gate opens</div></div>
         <div class="gstep done"><div class="gstep-icon">✓</div><div class="gstep-txt">update_pass writes last_entry to pass data</div></div>
         <div class="gstep active"><div class="gstep-icon">📲</div><div class="gstep-txt">PassQR pushes diff to Apple &amp; Google Wallet</div></div>
-        <div class="gstep" style="background:rgba(255,255,255,.02)"><div class="gstep-icon" style="background:rgba(255,255,255,.05)">📱</div><div class="gstep-txt">Resident's wallet shows updated pass</div></div>
+        <div class="gstep" style="background:rgba(255,255,255,.02)"><div class="gstep-icon" style="background:rgba(255,255,255,.05)">📱</div><div class="gstep-txt">Resident’s wallet shows updated pass</div></div>
       </div>
-      <div style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid rgba(255,255,255,.06);font-size:11px;color:var(--white3);text-align:center">Resident sees "Last entry: Main Gate · 23:33" on their lock screen — without opening any app.</div>
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid rgba(255,255,255,.06);font-size:11px;color:var(--white3);text-align:center">Resident sees “Last entry: Main Gate · 23:33” on their lock screen — without opening any app.</div>
     </div>
   </div>
 </div>
@@ -399,7 +391,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 <div class="slide" id="s7">
   <div class="pitch-wrap">
     <div class="pitch-label">30-second elevator pitch · For Aiphone Country Manager</div>
-    <div class="pitch-text">"You have <span class="hl">Aiphone IXG in hundreds of Singapore condominiums</span>. Every resident still carries a plastic card. We fix that — software only, no hardware change.<br><br>We put a <span class="hl2">digital wallet pass on every resident's phone</span> — Apple Wallet, Google Wallet — bridged to your existing relay. Every time they scan at the gate, <span class="hl">their pass updates live on their lock screen</span>. Full audit trail, automatic expiry, zero card printing.<br><br>We want to run a <span class="hl2">co-branded pilot at one condo — at our cost.</span> You get a reference site, we handle the integration, you earn recurring software revenue on top of your hardware.<br><br><em>Which of your installed-base condos should we start with?</em>"</div>
+    <div class="pitch-text">“You have <span class="hl">Aiphone IXG in hundreds of Singapore condominiums</span>. Every resident still carries a plastic card. We fix that — software only, no hardware change.<br><br>We put a <span class="hl2">digital wallet pass on every resident’s phone</span> — Apple Wallet, Google Wallet — bridged to your existing relay. Every time they scan at the gate, <span class="hl">their pass updates live on their lock screen</span>. Full audit trail, automatic expiry, zero card printing.<br><br>We want to run a <span class="hl2">co-branded pilot at one condo — at our cost.</span> You get a reference site, we handle the integration, you earn recurring software revenue on top of your hardware.<br><br><em>Which of your installed-base condos should we start with?</em>”</div>
     <div class="cta">
       <button class="cta-btn cta-primary" onclick="startPitchTimer()">▶ Start 30s timer</button>
       <button class="cta-btn cta-secondary" onclick="goSlide(0)">Back to start</button>
@@ -418,7 +410,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   <div class="mrr-box"><div class="mrr-lbl">Example: 250-unit condo at S$4/unit/month</div><div class="mrr-val">S$1,000 MRR per site — scales with every condo onboarded</div></div>
 </div>
 
-</div><!-- /deck -->
+</div>
 
 <div class="nav">
   <button class="nav-btn" id="btn-prev" onclick="prevSlide()" disabled>‹</button>
@@ -456,20 +448,16 @@ document.addEventListener('keydown',e=>{
 window.addEventListener('load',()=>{
   new QRCode(document.getElementById('qr-owner'),  {text:'PASS-FNEBCPT9',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
   new QRCode(document.getElementById('qr-tenant'), {text:'PASS-DJSQ8X89',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-  new QRCode(document.getElementById('qr-visitor'),{text:'PASS-GXVKSEQW',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+  new QRCode(document.getElementById('qr-visitor'),{text:'PASS-YVG57Y5M',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 });
 
 const PASSES={
   'PASS-FNEBCPT9':{code:'PASS-FNEBCPT9',holder:'Mr. David Tan',unit:'12-08',tier:'Owner',tiercls:'tier-owner',gates:'Main Gate · Car Park · Gym · BBQ Pit',relay:'Triggered — gate open 5s',baseName:'Mr. David Tan — Unit 12-08 (Owner)',lastEntryEl:'last-entry-owner'},
   'PASS-DJSQ8X89':{code:'PASS-DJSQ8X89',holder:'Ms. Priya Nair',unit:'07-03',tier:'Tenant',tiercls:'tier-tenant',gates:'Main Gate · Car Park',relay:'Triggered — gate open 5s',baseName:'Ms. Priya Nair — Unit 07-03 (Tenant)',lastEntryEl:'last-entry-tenant'},
-  'PASS-GXVKSEQW':{code:'PASS-GXVKSEQW',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',gates:'Main Gate Only',relay:'Triggered — gate open 5s',baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
+  'PASS-YVG57Y5M':{code:'PASS-YVG57Y5M',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',gates:'Main Gate Only',relay:'Triggered — gate open 5s',baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
 };
 
-/* ── SCANNER
-   html5-qrcode runs in #qr-engine (off-screen).
-   After start(), we grab its camera stream and pipe it to #scan-video.
-   Result: clean visual layout we control 100%, reliable detection by h5q. */
-let scanner=null, scanning=false, blocked=false;
+let scanner=null,scanning=false,blocked=false,autoDismissTimer=null;
 const scanLine=document.getElementById('scan-line');
 const statusEl=document.getElementById('scan-status');
 const lblEl=document.getElementById('scan-lbl');
@@ -482,10 +470,9 @@ async function startScanner(){
   try{
     scanner=new Html5Qrcode('qr-engine');
     blocked=false;
-
     await scanner.start(
       {facingMode:'environment'},
-      {fps:15, qrbox:{width:260,height:260}},
+      {fps:15,qrbox:{width:260,height:260}},
       (decodedText)=>{
         if(blocked)return;
         const code=decodedText.trim().toUpperCase();
@@ -498,19 +485,13 @@ async function startScanner(){
       },
       ()=>{}
     );
-
-    // Pipe html5-qrcode's hidden camera stream → our visible video
     const engineVideo=document.querySelector('#qr-engine video');
-    if(engineVideo&&engineVideo.srcObject){
-      displayVideo.srcObject=engineVideo.srcObject;
-    }
-
+    if(engineVideo&&engineVideo.srcObject){displayVideo.srcObject=engineVideo.srcObject;}
     scanning=true;
     statusEl.textContent='scanning…';
     lblEl.innerHTML='Point at pass QR · <span style="color:var(--blue2);cursor:pointer;text-decoration:underline;pointer-events:all" onclick="restartScan()">restart</span>';
     btnEl.textContent='Stop Scanner';btnEl.classList.add('stop');
     scanLine.classList.remove('paused');
-
   }catch(err){
     scanning=false;
     statusEl.textContent='camera error';
@@ -520,6 +501,7 @@ async function startScanner(){
 }
 
 async function stopScanner(){
+  clearAutoDismiss();
   try{if(scanner&&scanner.isScanning)await scanner.stop();if(scanner){scanner.clear();scanner=null;}}catch(e){}
   displayVideo.srcObject=null;
   scanning=false;blocked=false;
@@ -529,10 +511,32 @@ async function stopScanner(){
   scanLine.classList.add('paused');
 }
 
-async function restartScan(){
-  await stopScanner();
-  await new Promise(r=>setTimeout(r,400));
-  await startScanner();
+async function restartScan(){await stopScanner();await new Promise(r=>setTimeout(r,400));await startScanner();}
+
+function startAutoDismiss(){
+  clearAutoDismiss();
+  const ring=document.getElementById('dismiss-ring');
+  const progress=document.getElementById('ring-progress');
+  const CIRCUMFERENCE=75.4;
+  const DURATION=4000;
+  ring.style.display='block';
+  progress.style.strokeDashoffset=CIRCUMFERENCE;
+  let start=null;
+  function tick(ts){
+    if(!start)start=ts;
+    const elapsed=ts-start;
+    const frac=Math.min(elapsed/DURATION,1);
+    progress.style.strokeDashoffset=CIRCUMFERENCE*(1-frac);
+    if(frac<1){autoDismissTimer=requestAnimationFrame(tick);}
+    else{dismissResult();}
+  }
+  autoDismissTimer=requestAnimationFrame(tick);
+}
+
+function clearAutoDismiss(){
+  if(autoDismissTimer){cancelAnimationFrame(autoDismissTimer);autoDismissTimer=null;}
+  const ring=document.getElementById('dismiss-ring');
+  if(ring)ring.style.display='none';
 }
 
 const SCAN_ENDPOINT='https://passqr-scan.vincent-513.workers.dev/scan';
@@ -550,15 +554,24 @@ async function doScan(code){
   document.getElementById('r-time').textContent=elapsed+'ms';
   document.getElementById('r-ts').textContent=ts;
   const badge=document.getElementById('r-badge');badge.className='rbadge '+pass.tiercls;badge.textContent=pass.tier;
+  document.getElementById('r-title').textContent='✓  Access Granted';
+  document.querySelector('.rdot').className='rdot valid';
   setPushState('loading','Updating wallet pass…','Writing last_entry · pushing to Apple &amp; Google Wallet');
   document.getElementById('result-overlay').classList.add('visible');
   if(pass.lastEntryEl){const t=now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'});document.getElementById(pass.lastEntryEl).textContent=`Main Gate · ${t} SGT`;}
   try{
     const res=await fetch(SCAN_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,holderName:pass.baseName,gate:'Main Gate'})});
     const data=await res.json();
-    if(res.ok&&data.success!==false)setPushState('done','✓ Wallet updated','last_entry pushed to Apple &amp; Google Wallet');
-    else setPushState('err','Push error',(data.error?.message||JSON.stringify(data)).slice(0,80));
-  }catch(e){setPushState('err','Network error',e.message.slice(0,80));}
+    if(res.ok&&data.success!==false){
+      setPushState('done','✓ Wallet updated','last_entry pushed to Apple &amp; Google Wallet');
+    }else{
+      setPushState('err','Push error',(data.error?.message||JSON.stringify(data)).slice(0,80));
+    }
+    startAutoDismiss();
+  }catch(e){
+    setPushState('err','Network error',e.message.slice(0,80));
+    startAutoDismiss();
+  }
 }
 
 function setPushState(s,title,detail){
@@ -571,6 +584,7 @@ function setPushState(s,title,detail){
 }
 
 function dismissResult(){
+  clearAutoDismiss();
   document.getElementById('result-overlay').classList.remove('visible');
   if(scanning){blocked=false;scanLine.classList.remove('paused');statusEl.textContent='scanning…';}
 }

@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aiphone × PassQR — Singapore Demo</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<!-- ZXing: battle-tested QR library used in production scanning apps -->
+<script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.4/umd/index.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -94,15 +95,13 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .pass-visitor .pass-front{background:linear-gradient(145deg,#2a1a10,#1a0f06)}
 .pass-visitor .pass-tier{background:rgba(245,158,11,.15);color:#fcd34d;border:.5px solid rgba(245,158,11,.3)}
 .pass-visitor .pass-logo{color:#fcd34d}
-
-/* ── S5 CAMERA SCANNER ── */
+/* ── S5 SCANNER ── */
 #s5{background:#050d1a;padding:0;overflow:hidden}
 .scan-wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-#scan-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6;cursor:pointer}
-#scan-canvas{display:none}
+#scan-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.65}
 .scan-ui{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:1.2rem;pointer-events:none}
-.scan-frame{width:240px;height:240px;position:relative}
-.scan-frame .c{position:absolute;width:32px;height:32px;border-color:var(--blue2);border-style:solid}
+.scan-frame{width:260px;height:260px;position:relative}
+.scan-frame .c{position:absolute;width:34px;height:34px;border-color:var(--blue2);border-style:solid}
 .scan-frame .c.tl{top:0;left:0;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
 .scan-frame .c.tr{top:0;right:0;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
 .scan-frame .c.bl{bottom:0;left:0;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
@@ -115,11 +114,9 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 #scan-btn{pointer-events:all;background:var(--blue);color:white;border:none;padding:11px 28px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all .2s;box-shadow:0 0 24px rgba(26,111,212,.4)}
 #scan-btn:hover{background:var(--blue2)}
 #scan-btn.stop{background:rgba(239,68,68,.2);border:.5px solid rgba(239,68,68,.5);color:#fca5a5;box-shadow:none}
-/* Fallback pill row — small and unobtrusive */
 .fallback-row{pointer-events:all;display:flex;gap:8px;margin-top:.5rem}
 .fallback-pill{background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);color:var(--white3);font-size:11px;font-family:var(--sans);padding:5px 13px;border-radius:99px;cursor:pointer;transition:all .15s}
 .fallback-pill:hover{background:rgba(255,255,255,.12);color:var(--white2)}
-
 /* RESULT OVERLAY */
 #result-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(5,13,26,.9);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s ease}
 #result-overlay.visible{opacity:1;pointer-events:all}
@@ -304,11 +301,10 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S5 CAMERA SCANNER -->
+<!-- S5 CAMERA SCANNER — ZXing -->
 <div class="slide" id="s5" style="padding:0">
   <div class="scan-wrap">
-    <video id="scan-video" autoplay playsinline muted onclick="tapFocus()"></video>
-    <canvas id="scan-canvas"></canvas>
+    <video id="scan-video" autoplay playsinline muted></video>
     <div class="scan-ui">
       <div class="scan-frame">
         <div class="c tl"></div><div class="c tr"></div>
@@ -318,7 +314,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
       <div class="scan-lbl" id="scan-lbl">Point camera at a pass QR code</div>
       <div class="scan-status" id="scan-status">camera off</div>
       <button id="scan-btn" onclick="toggleScanner()">Start Scanner</button>
-      <!-- Small pill fallback — unobtrusive, for demo-day glare situations -->
       <div class="fallback-row">
         <button class="fallback-pill" onclick="doScan('PASS-FNEBCPT9')">Owner</button>
         <button class="fallback-pill" onclick="doScan('PASS-DJSQ8X89')">Tenant</button>
@@ -468,11 +463,8 @@ const PASSES={
     baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
 };
 
-/* ── CAMERA SCANNER ── */
-let stream=null,rafId=null,scanning=false,blocked=false;
-const video=document.getElementById('scan-video');
-const canvas=document.getElementById('scan-canvas');
-const ctx=canvas.getContext('2d');
+/* ── ZXING SCANNER ── */
+let codeReader=null, scanning=false, blocked=false;
 const scanLine=document.getElementById('scan-line');
 const statusEl=document.getElementById('scan-status');
 const lblEl=document.getElementById('scan-lbl');
@@ -482,68 +474,57 @@ async function toggleScanner(){if(scanning){stopScanner();}else{await startScann
 
 async function startScanner(){
   try{
-    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}});
-    video.srcObject=stream; await video.play();
-    // Request continuous autofocus
-    try{const t=stream.getVideoTracks()[0];const c=t.getCapabilities?t.getCapabilities():{};if(c.focusMode&&c.focusMode.includes('continuous'))await t.applyConstraints({advanced:[{focusMode:'continuous'}]});}catch(e){}
+    // Build ZXing reader with TRY_HARDER hint for better screen-scanning
+    const hints=new Map();
+    hints.set(ZXingBrowser.DecodeHintType?.TRY_HARDER,true);
+    codeReader=new ZXingBrowser.BrowserQRCodeReader(hints,{delayBetweenScanAttempts:100});
+
+    // Pick the environment-facing (back) camera if available
+    const devices=await ZXingBrowser.BrowserCodeReader.listVideoInputDevices();
+    const deviceId=devices.length>0?devices[devices.length-1].deviceId:undefined;
+
     scanning=true;blocked=false;
     statusEl.textContent='scanning…';
-    lblEl.innerHTML='Point at pass QR · <span style="color:var(--blue2);cursor:pointer;text-decoration:underline;pointer-events:all" onclick="tapFocus()">tap to focus</span>';
+    lblEl.innerHTML='Point at pass QR · <span style="color:var(--blue2);cursor:pointer;text-decoration:underline;pointer-events:all" onclick="restartScan()">restart camera</span>';
     btnEl.textContent='Stop Scanner';btnEl.classList.add('stop');
     scanLine.classList.remove('paused');
-    requestAnimationFrame(scanFrame);
-  }catch(err){statusEl.textContent='camera error';lblEl.textContent=err.message;}
-}
 
-async function tapFocus(){
-  if(!stream)return;
-  try{
-    const t=stream.getVideoTracks()[0];const c=t.getCapabilities?t.getCapabilities():{};
-    if(c.focusMode&&c.focusMode.includes('manual')){
-      await t.applyConstraints({advanced:[{focusMode:'manual'}]});
-      setTimeout(async()=>{try{await t.applyConstraints({advanced:[{focusMode:'continuous'}]});}catch(e){}},600);
-    }else{
-      const s=t.getSettings();t.stop();
-      const ns=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:s.width||1280},height:{ideal:s.height||720}}});
-      stream=ns;video.srcObject=ns;await video.play();
-    }
-  }catch(e){}
+    await codeReader.decodeFromVideoDevice(deviceId,'scan-video',(result,err)=>{
+      if(result&&!blocked){
+        const val=result.getText().trim().toUpperCase();
+        if(PASSES[val]){
+          blocked=true;
+          scanLine.classList.add('paused');
+          statusEl.textContent='scanned ✓';
+          doScan(val);
+        }
+      }
+      // err is normal (no QR in frame), ignore NotFoundException
+    });
+  }catch(err){
+    scanning=false;
+    statusEl.textContent='camera error';
+    lblEl.textContent=err.message||'Could not start camera';
+    btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');
+  }
 }
 
 function stopScanner(){
-  scanning=false;
-  if(rafId){cancelAnimationFrame(rafId);rafId=null;}
-  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-  video.srcObject=null;
+  if(codeReader){codeReader.reset();codeReader=null;}
+  scanning=false;blocked=false;
   statusEl.textContent='camera off';
   lblEl.innerHTML='Point camera at a pass QR code';
   btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');
   scanLine.classList.add('paused');
 }
 
-function scanFrame(){
-  if(!scanning)return;
-  if(blocked){rafId=requestAnimationFrame(scanFrame);return;}
-  if(video.readyState!==video.HAVE_ENOUGH_DATA){rafId=requestAnimationFrame(scanFrame);return;}
-
-  const vw=video.videoWidth,vh=video.videoHeight;
-  // Crop to central 45% — QR fills much more of the analyzed area
-  const cr=0.45,cw=Math.floor(vw*cr),ch=Math.floor(vh*cr);
-  const cx=Math.floor((vw-cw)/2),cy=Math.floor((vh-ch)/2);
-  canvas.width=cw;canvas.height=ch;
-  ctx.drawImage(video,cx,cy,cw,ch,0,0,cw,ch);
-
-  const img=ctx.getImageData(0,0,cw,ch);
-  // attemptBoth handles both dark-on-light AND light-on-dark QR codes
-  const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
-  if(code&&code.data){
-    const val=code.data.trim().toUpperCase();
-    if(PASSES[val]){blocked=true;scanLine.classList.add('paused');statusEl.textContent='scanned ✓';doScan(val);return;}
-  }
-  rafId=requestAnimationFrame(scanFrame);
+async function restartScan(){
+  stopScanner();
+  await new Promise(r=>setTimeout(r,300));
+  await startScanner();
 }
 
-/* ── SCAN HANDLER (shared by camera + fallback pills) ── */
+/* ── SCAN HANDLER ── */
 const SCAN_ENDPOINT='https://passqr-scan.vincent-513.workers.dev/scan';
 
 async function doScan(code){
@@ -588,7 +569,6 @@ function setPushState(s,title,detail){
 
 function dismissResult(){
   document.getElementById('result-overlay').classList.remove('visible');
-  // Resume scanning after dismiss
   if(scanning){blocked=false;scanLine.classList.remove('paused');statusEl.textContent='scanning…';}
 }
 

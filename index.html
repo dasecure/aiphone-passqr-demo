@@ -94,16 +94,28 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .pass-visitor .pass-front{background:linear-gradient(145deg,#2a1a10,#1a0f06)}
 .pass-visitor .pass-tier{background:rgba(245,158,11,.15);color:#fcd34d;border:.5px solid rgba(245,158,11,.3)}
 .pass-visitor .pass-logo{color:#fcd34d}
+
 /* ── S5 SCANNER ── */
 #s5{background:#050d1a;padding:0;overflow:hidden}
-.scan-wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-/* html5-qrcode renders its video inside this div */
-#qr-box{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
-#qr-box video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:.65}
-/* suppress html5-qrcode's built-in UI chrome */
-#qr-box__scan_region img,#qr-box__scan_region svg,#qr-box__dashboard{display:none!important}
-#qr-box__scan_region{border:none!important;box-shadow:none!important}
-.scan-ui{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:1.2rem;pointer-events:none}
+/* scan-wrap is the positioning root — no flex, just relative */
+.scan-wrap{position:relative;width:100%;height:100%}
+
+/* Force qr-box to fill the entire slide.
+   html5-qrcode sets position:relative + explicit px widths inline.
+   !important wins over those inline styles. */
+#qr-box{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
+#qr-box__scan_region{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:none!important;box-shadow:none!important}
+
+/* Video covers full background */
+#qr-box video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:.65!important}
+
+/* Kill ALL html5-qrcode visual chrome — the shaded overlay, border images, dashboard */
+#qr-box__scan_region>:not(video){display:none!important}
+#qr-box__dashboard{display:none!important}
+
+/* Our overlay — absolutely centred on top of the camera */
+.scan-ui{position:absolute!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;z-index:10;display:flex;flex-direction:column;align-items:center;gap:1.2rem;pointer-events:none;width:100%}
+
 .scan-frame{width:260px;height:260px;position:relative}
 .scan-frame .c{position:absolute;width:34px;height:34px;border-color:var(--blue2);border-style:solid}
 .scan-frame .c.tl{top:0;left:0;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
@@ -121,6 +133,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .fallback-row{pointer-events:all;display:flex;gap:8px;margin-top:.5rem}
 .fallback-pill{background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);color:var(--white3);font-size:11px;font-family:var(--sans);padding:5px 13px;border-radius:99px;cursor:pointer;transition:all .15s}
 .fallback-pill:hover{background:rgba(255,255,255,.12);color:var(--white2)}
+
 /* RESULT OVERLAY */
 #result-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(5,13,26,.9);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s ease}
 #result-overlay.visible{opacity:1;pointer-events:all}
@@ -305,10 +318,9 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S5 CAMERA SCANNER — html5-qrcode -->
+<!-- S5 CAMERA SCANNER -->
 <div class="slide" id="s5" style="padding:0">
   <div class="scan-wrap">
-    <!-- html5-qrcode renders camera feed into this div -->
     <div id="qr-box"></div>
     <div class="scan-ui">
       <div class="scan-frame">
@@ -428,7 +440,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 </div>
 
 <script>
-/* ── SLIDES ── */
 let current=0;const TOTAL=8;let timerInterval=null;
 function goSlide(n){
   if(current===4&&n!==4)stopScanner();
@@ -447,111 +458,54 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide();}
   if(e.key==='ArrowLeft'){e.preventDefault();prevSlide();}
 });
-
-/* ── QR CODES ── */
 window.addEventListener('load',()=>{
   new QRCode(document.getElementById('qr-owner'),  {text:'PASS-FNEBCPT9',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
   new QRCode(document.getElementById('qr-tenant'), {text:'PASS-DJSQ8X89',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
   new QRCode(document.getElementById('qr-visitor'),{text:'PASS-GXVKSEQW',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 });
-
-/* ── PASS DATABASE ── */
 const PASSES={
-  'PASS-FNEBCPT9':{code:'PASS-FNEBCPT9',holder:'Mr. David Tan',unit:'12-08',tier:'Owner',tiercls:'tier-owner',
-    gates:'Main Gate · Car Park · Gym · BBQ Pit',relay:'Triggered — gate open 5s',
-    baseName:'Mr. David Tan — Unit 12-08 (Owner)',lastEntryEl:'last-entry-owner'},
-  'PASS-DJSQ8X89':{code:'PASS-DJSQ8X89',holder:'Ms. Priya Nair',unit:'07-03',tier:'Tenant',tiercls:'tier-tenant',
-    gates:'Main Gate · Car Park',relay:'Triggered — gate open 5s',
-    baseName:'Ms. Priya Nair — Unit 07-03 (Tenant)',lastEntryEl:'last-entry-tenant'},
-  'PASS-GXVKSEQW':{code:'PASS-GXVKSEQW',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',
-    gates:'Main Gate Only',relay:'Triggered — gate open 5s',
-    baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
+  'PASS-FNEBCPT9':{code:'PASS-FNEBCPT9',holder:'Mr. David Tan',unit:'12-08',tier:'Owner',tiercls:'tier-owner',gates:'Main Gate · Car Park · Gym · BBQ Pit',relay:'Triggered — gate open 5s',baseName:'Mr. David Tan — Unit 12-08 (Owner)',lastEntryEl:'last-entry-owner'},
+  'PASS-DJSQ8X89':{code:'PASS-DJSQ8X89',holder:'Ms. Priya Nair',unit:'07-03',tier:'Tenant',tiercls:'tier-tenant',gates:'Main Gate · Car Park',relay:'Triggered — gate open 5s',baseName:'Ms. Priya Nair — Unit 07-03 (Tenant)',lastEntryEl:'last-entry-tenant'},
+  'PASS-GXVKSEQW':{code:'PASS-GXVKSEQW',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',gates:'Main Gate Only',relay:'Triggered — gate open 5s',baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
 };
-
-/* ── html5-qrcode SCANNER ── */
-let scanner=null, scanning=false, blocked=false;
-const scanLine=document.getElementById('scan-line');
-const statusEl=document.getElementById('scan-status');
-const lblEl=document.getElementById('scan-lbl');
-const btnEl=document.getElementById('scan-btn');
-
+let scanner=null,scanning=false,blocked=false;
+const scanLine=document.getElementById('scan-line'),statusEl=document.getElementById('scan-status'),lblEl=document.getElementById('scan-lbl'),btnEl=document.getElementById('scan-btn');
 async function toggleScanner(){if(scanning){await stopScanner();}else{await startScanner();}}
-
 async function startScanner(){
   try{
-    scanner=new Html5Qrcode('qr-box');
-    blocked=false;
-
+    scanner=new Html5Qrcode('qr-box');blocked=false;
     await scanner.start(
       {facingMode:'environment'},
-      {
-        fps:15,
-        // qrbox restricts scan detection to the central 260×260 region — much more reliable
-        qrbox:{width:260,height:260},
-        aspectRatio:window.innerWidth/window.innerHeight,
-        disableFlip:false,
-        rememberLastUsedCamera:true,
-        showTorchButtonIfSupported:false,
-        showZoomSliderIfSupported:false,
-        defaultZoomValueIfSupported:1,
-      },
+      {fps:15,qrbox:{width:260,height:260},aspectRatio:window.innerWidth/window.innerHeight,disableFlip:false},
       (decodedText)=>{
-        // Success callback — QR detected
         if(blocked)return;
         const code=decodedText.trim().toUpperCase();
-        if(PASSES[code]){
-          blocked=true;
-          scanLine.classList.add('paused');
-          statusEl.textContent='scanned ✓';
-          doScan(code);
-        }
+        if(PASSES[code]){blocked=true;scanLine.classList.add('paused');statusEl.textContent='scanned ✓';doScan(code);}
       },
-      ()=>{}  // Error callback fires every frame when no QR found — intentionally empty
+      ()=>{}
     );
-
-    scanning=true;
-    statusEl.textContent='scanning…';
+    scanning=true;statusEl.textContent='scanning…';
     lblEl.innerHTML='Point at pass QR · <span style="color:var(--blue2);cursor:pointer;text-decoration:underline;pointer-events:all" onclick="restartScan()">restart</span>';
-    btnEl.textContent='Stop Scanner';btnEl.classList.add('stop');
-    scanLine.classList.remove('paused');
-
+    btnEl.textContent='Stop Scanner';btnEl.classList.add('stop');scanLine.classList.remove('paused');
   }catch(err){
-    scanning=false;
-    statusEl.textContent='camera error';
-    lblEl.textContent=err?.message||'Could not start camera — check permissions';
+    scanning=false;statusEl.textContent='camera error';
+    lblEl.textContent=err?.message||'Could not start camera';
     btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');
   }
 }
-
 async function stopScanner(){
-  try{
-    if(scanner&&scanner.isScanning){
-      await scanner.stop();
-    }
-    if(scanner){scanner.clear();scanner=null;}
-  }catch(e){}
-  scanning=false;blocked=false;
-  statusEl.textContent='camera off';
+  try{if(scanner&&scanner.isScanning)await scanner.stop();if(scanner){scanner.clear();scanner=null;}}catch(e){}
+  scanning=false;blocked=false;statusEl.textContent='camera off';
   lblEl.innerHTML='Point camera at a pass QR code';
-  btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');
-  scanLine.classList.add('paused');
+  btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');scanLine.classList.add('paused');
 }
-
-async function restartScan(){
-  await stopScanner();
-  await new Promise(r=>setTimeout(r,400));
-  await startScanner();
-}
-
-/* ── SCAN HANDLER ── */
+async function restartScan(){await stopScanner();await new Promise(r=>setTimeout(r,400));await startScanner();}
 const SCAN_ENDPOINT='https://passqr-scan.vincent-513.workers.dev/scan';
-
 async function doScan(code){
   const pass=PASSES[code];if(!pass)return;
   const now=new Date();
   const ts=now.toLocaleDateString('en-SG',{day:'2-digit',month:'short',year:'numeric'})+' · '+now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' SGT';
   const elapsed=Math.round(280+Math.random()*90);
-
   document.getElementById('r-code').textContent=code;
   document.getElementById('r-holder').textContent=pass.holder;
   document.getElementById('r-unit').textContent=`Unit ${pass.unit} · ${pass.tier}`;
@@ -560,15 +514,9 @@ async function doScan(code){
   document.getElementById('r-time').textContent=elapsed+'ms';
   document.getElementById('r-ts').textContent=ts;
   const badge=document.getElementById('r-badge');badge.className='rbadge '+pass.tiercls;badge.textContent=pass.tier;
-
   setPushState('loading','Updating wallet pass…','Writing last_entry · pushing to Apple &amp; Google Wallet');
   document.getElementById('result-overlay').classList.add('visible');
-
-  if(pass.lastEntryEl){
-    const t=now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById(pass.lastEntryEl).textContent=`Main Gate · ${t} SGT`;
-  }
-
+  if(pass.lastEntryEl){const t=now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'});document.getElementById(pass.lastEntryEl).textContent=`Main Gate · ${t} SGT`;}
   try{
     const res=await fetch(SCAN_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,holderName:pass.baseName,gate:'Main Gate'})});
     const data=await res.json();
@@ -576,7 +524,6 @@ async function doScan(code){
     else setPushState('err','Push error',(data.error?.message||JSON.stringify(data)).slice(0,80));
   }catch(e){setPushState('err','Network error',e.message.slice(0,80));}
 }
-
 function setPushState(s,title,detail){
   const strip=document.getElementById('push-strip'),spin=document.getElementById('pspin');
   document.getElementById('p-title').textContent=title;document.getElementById('p-detail').innerHTML=detail;
@@ -585,13 +532,10 @@ function setPushState(s,title,detail){
   else if(s==='done'){strip.classList.add('done');spin.className='pspin done';spin.textContent='📲';}
   else{strip.classList.add('err');spin.className='pspin done';spin.textContent='⚠';}
 }
-
 function dismissResult(){
   document.getElementById('result-overlay').classList.remove('visible');
   if(scanning){blocked=false;scanLine.classList.remove('paused');statusEl.textContent='scanning…';}
 }
-
-/* ── PITCH TIMER ── */
 function startPitchTimer(){
   if(timerInterval)clearInterval(timerInterval);
   const fill=document.getElementById('timer-fill'),label=document.getElementById('timer-label');

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aiphone × PassQR — Singapore Demo</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -28,7 +29,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .nav-btn:hover{background:rgba(255,255,255,.15)}
 .nav-btn:disabled{opacity:.3;cursor:default}
 .slide-counter{font-size:11px;color:var(--white3);min-width:40px;text-align:center}
-/* S1 */
 #s1{background:radial-gradient(ellipse at 30% 50%,rgba(26,111,212,.12) 0%,transparent 60%),var(--navy)}
 #s1 .badge{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:.5px solid rgba(200,150,58,.4);padding:5px 14px;border-radius:99px;margin-bottom:1.5rem}
 #s1 h1{font-family:var(--serif);font-size:clamp(36px,5vw,60px);line-height:1.15;text-align:center;max-width:820px}
@@ -37,7 +37,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 #s1 .logos{display:flex;align-items:center;gap:1.5rem;margin-top:2.5rem}
 #s1 .logo-box{padding:10px 24px;border:.5px solid rgba(255,255,255,.12);border-radius:10px;font-size:15px;font-weight:600;letter-spacing:.05em}
 .logo-aiphone{color:#4fc3f7}.logo-plus{color:var(--white3);font-size:18px}.logo-passqr{color:var(--gold2)}.logo-via{color:var(--white3);font-size:12px}.logo-dasecure{color:var(--white2);font-size:13px}
-/* S2 */
 #s2{flex-direction:row;gap:5rem;align-items:center}
 #s2 .col{flex:1}
 #s2 h2{font-family:var(--serif);font-size:clamp(26px,3.5vw,42px);line-height:1.2;margin-bottom:1.5rem}
@@ -50,7 +49,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .stat-box .big{font-family:var(--serif);font-size:72px;color:var(--gold2);line-height:1}
 .stat-box .big2{font-family:var(--serif);font-size:48px;color:var(--blue2);line-height:1;margin-top:1.5rem}
 .stat-box p{font-size:13px;color:var(--white2);margin-top:8px;line-height:1.5}
-/* S3 */
 #s3{background:radial-gradient(ellipse at 70% 30%,rgba(26,111,212,.1) 0%,transparent 60%),var(--navy)}
 #s3 .top{text-align:center;margin-bottom:2.5rem}
 #s3 h2{font-family:var(--serif);font-size:clamp(24px,3vw,38px)}
@@ -66,7 +64,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .flow-arrow .arrowhead{color:var(--blue2);font-size:14px;margin-top:-4px}
 .chips{display:flex;gap:10px;margin-top:2rem;flex-wrap:wrap;justify-content:center}
 .chip{font-size:12px;padding:6px 14px;border-radius:99px;border:.5px solid rgba(34,197,94,.4);background:rgba(34,197,94,.08);color:#86efac}
-/* S4 */
 #s4 .top{text-align:center;margin-bottom:2rem}
 #s4 h2{font-family:var(--serif);font-size:clamp(22px,3vw,36px)}
 #s4 .sub{font-size:13px;color:var(--white3);margin-top:6px}
@@ -97,35 +94,33 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .pass-visitor .pass-front{background:linear-gradient(145deg,#2a1a10,#1a0f06)}
 .pass-visitor .pass-tier{background:rgba(245,158,11,.15);color:#fcd34d;border:.5px solid rgba(245,158,11,.3)}
 .pass-visitor .pass-logo{color:#fcd34d}
-/* S5 — tap-to-scan */
-#s5{background:radial-gradient(ellipse at 50% 30%,rgba(26,111,212,.18) 0%,transparent 60%),var(--navy)}
-.s5-inner{display:flex;flex-direction:column;align-items:center;gap:1.8rem;width:100%;max-width:800px}
-.s5-inner h2{font-family:var(--serif);font-size:clamp(24px,3vw,38px);text-align:center}
-.s5-inner .sub{font-size:13px;color:var(--white3);text-align:center;margin-top:-.8rem}
-.tap-row{display:flex;gap:16px;width:100%}
-.tap-pass{flex:1;border-radius:18px;padding:1.5rem 1.25rem;cursor:pointer;border:.5px solid rgba(255,255,255,.12);transition:all .2s;text-align:left;font-family:var(--sans);background:none}
-.tap-pass:hover{transform:translateY(-3px)}
-.tap-pass:active{transform:scale(.97)}
-.tp-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:99px;display:inline-block;margin-bottom:10px}
-.tp-name{font-size:15px;font-weight:600;color:var(--white);margin-bottom:3px}
-.tp-unit{font-size:12px;color:var(--white3);margin-bottom:14px}
-.tp-cta{font-size:12px;font-weight:600;letter-spacing:.04em;display:flex;align-items:center;gap:7px}
-.tp-dot{width:8px;height:8px;border-radius:50%;animation:dotpulse 1.4s infinite}
-@keyframes dotpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.tap-owner{background:linear-gradient(145deg,rgba(26,58,92,.95),rgba(14,36,66,.98))}
-.tap-owner:hover{border-color:rgba(200,150,58,.5);box-shadow:0 8px 40px rgba(200,150,58,.15)}
-.tap-owner .tp-badge{background:rgba(200,150,58,.2);color:var(--gold2);border:.5px solid rgba(200,150,58,.4)}
-.tap-owner .tp-cta{color:var(--gold2)}.tap-owner .tp-dot{background:var(--gold2)}
-.tap-tenant{background:linear-gradient(145deg,rgba(20,40,20,.95),rgba(10,28,12,.98))}
-.tap-tenant:hover{border-color:rgba(34,197,94,.4);box-shadow:0 8px 40px rgba(34,197,94,.12)}
-.tap-tenant .tp-badge{background:rgba(34,197,94,.15);color:#86efac;border:.5px solid rgba(34,197,94,.3)}
-.tap-tenant .tp-cta{color:#86efac}.tap-tenant .tp-dot{background:#86efac}
-.tap-visitor{background:linear-gradient(145deg,rgba(42,24,10,.95),rgba(28,14,4,.98))}
-.tap-visitor:hover{border-color:rgba(245,158,11,.4);box-shadow:0 8px 40px rgba(245,158,11,.12)}
-.tap-visitor .tp-badge{background:rgba(245,158,11,.15);color:#fcd34d;border:.5px solid rgba(245,158,11,.3)}
-.tap-visitor .tp-cta{color:#fcd34d}.tap-visitor .tp-dot{background:#fcd34d}
-.s5-note{font-size:11px;color:var(--white3);text-align:center;padding:10px 20px;border-radius:10px;background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.07);line-height:1.7;width:100%}
-/* Result overlay */
+
+/* ── S5 CAMERA SCANNER ── */
+#s5{background:#050d1a;padding:0;overflow:hidden}
+.scan-wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#scan-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6;cursor:pointer}
+#scan-canvas{display:none}
+.scan-ui{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:1.2rem;pointer-events:none}
+.scan-frame{width:240px;height:240px;position:relative}
+.scan-frame .c{position:absolute;width:32px;height:32px;border-color:var(--blue2);border-style:solid}
+.scan-frame .c.tl{top:0;left:0;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
+.scan-frame .c.tr{top:0;right:0;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
+.scan-frame .c.bl{bottom:0;left:0;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
+.scan-frame .c.br{bottom:0;right:0;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
+.scan-line{position:absolute;left:4px;right:4px;height:2px;background:linear-gradient(90deg,transparent,var(--blue2),transparent);animation:scandown 1.8s ease-in-out infinite;box-shadow:0 0 8px var(--blue2),0 0 20px rgba(45,135,240,.4)}
+@keyframes scandown{0%{top:4px;opacity:1}48%{top:calc(100% - 6px);opacity:1}50%{top:calc(100% - 6px);opacity:0}52%{top:4px;opacity:0}54%{top:4px;opacity:1}100%{top:4px;opacity:1}}
+.scan-line.paused{animation-play-state:paused}
+.scan-lbl{font-size:13px;color:var(--white2);letter-spacing:.04em;text-align:center;line-height:1.6}
+.scan-status{font-size:11px;color:var(--white3);letter-spacing:.1em;text-transform:uppercase}
+#scan-btn{pointer-events:all;background:var(--blue);color:white;border:none;padding:11px 28px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all .2s;box-shadow:0 0 24px rgba(26,111,212,.4)}
+#scan-btn:hover{background:var(--blue2)}
+#scan-btn.stop{background:rgba(239,68,68,.2);border:.5px solid rgba(239,68,68,.5);color:#fca5a5;box-shadow:none}
+/* Fallback pill row — small and unobtrusive */
+.fallback-row{pointer-events:all;display:flex;gap:8px;margin-top:.5rem}
+.fallback-pill{background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);color:var(--white3);font-size:11px;font-family:var(--sans);padding:5px 13px;border-radius:99px;cursor:pointer;transition:all .15s}
+.fallback-pill:hover{background:rgba(255,255,255,.12);color:var(--white2)}
+
+/* RESULT OVERLAY */
 #result-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(5,13,26,.9);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s ease}
 #result-overlay.visible{opacity:1;pointer-events:all}
 .rcard{background:var(--navy2);border:.5px solid rgba(255,255,255,.1);border-radius:24px;width:400px;max-width:92vw;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.7);transform:scale(.92) translateY(12px);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
@@ -157,7 +152,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .rcard-foot{padding:1rem 1.5rem 1.5rem;border-top:.5px solid rgba(255,255,255,.08);margin-top:.5rem}
 #dismiss-btn{width:100%;padding:13px;border-radius:12px;border:none;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);background:var(--green);color:white;transition:background .2s}
 #dismiss-btn:hover{background:#16a34a}
-/* S6 */
 #s6{flex-direction:row;gap:4rem;align-items:center}
 #s6 .col{flex:1}
 #s6 h2{font-family:var(--serif);font-size:clamp(24px,3vw,38px);line-height:1.2;margin-bottom:.5rem}
@@ -183,9 +177,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 @keyframes spulse{0%,100%{border-color:rgba(45,135,240,.3)}50%{border-color:rgba(45,135,240,.7)}}
 .gstep-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;background:rgba(34,197,94,.15)}
 .gstep.active .gstep-icon{background:rgba(45,135,240,.2)}
-.gstep-idle .gstep-icon{background:rgba(255,255,255,.05)}
 .gstep .gstep-txt{color:var(--white2)}.gstep.done .gstep-txt{color:#86efac}
-/* S7 */
 #s7{background:radial-gradient(ellipse at 50% 50%,rgba(26,111,212,.15) 0%,transparent 70%),var(--navy)}
 .pitch-wrap{max-width:760px;text-align:center}
 .pitch-label{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);margin-bottom:1.5rem}
@@ -201,7 +193,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .timer{margin-top:2rem;font-size:12px;color:var(--white3);display:flex;align-items:center;gap:8px;justify-content:center}
 .timer-bar{width:120px;height:3px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
 .timer-fill{height:100%;background:var(--gold);border-radius:99px;width:0%;transition:width .1s linear}
-/* S8 */
 #s8 .top{text-align:center;margin-bottom:2rem}
 #s8 h2{font-family:var(--serif);font-size:clamp(22px,3vw,36px)}
 #s8 .sub{font-size:13px;color:var(--white3);margin-top:4px}
@@ -226,21 +217,17 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 <body>
 <div class="deck">
 
-<!-- S1 TITLE -->
 <div class="slide active" id="s1">
   <div class="badge">Live Demo · Singapore · April 2026</div>
   <h1>Your hardware.<br><em>Our intelligence.</em><br>Every condo, smarter.</h1>
   <p class="sub">PassQR digital wallet passes integrated with Aiphone IXG access control</p>
   <div class="logos">
-    <div class="logo-box logo-aiphone">AIPHONE</div>
-    <div class="logo-plus">×</div>
-    <div class="logo-box logo-passqr">PassQR</div>
-    <div class="logo-via">via</div>
+    <div class="logo-box logo-aiphone">AIPHONE</div><div class="logo-plus">×</div>
+    <div class="logo-box logo-passqr">PassQR</div><div class="logo-via">via</div>
     <div class="logo-dasecure">dasecure.com</div>
   </div>
 </div>
 
-<!-- S2 PROBLEM -->
 <div class="slide" id="s2">
   <div class="col">
     <h2>Singapore condos still run on plastic.</h2>
@@ -254,7 +241,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S3 ARCHITECTURE -->
 <div class="slide" id="s3">
   <div class="top"><h2>One software layer. No hardware swap.</h2><p style="font-size:13px;color:var(--white3);margin-top:6px">dasecure middleware bridges PassQR to your existing Aiphone IXW-MA relay</p></div>
   <div class="flow">
@@ -273,30 +259,27 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S4 LIVE PASSES -->
 <div class="slide" id="s4">
-  <div class="top"><h2>Three live passes. Created in this room.</h2><p class="sub">Generated via PassQR MCP — tap a pass on the next slide to trigger a real wallet update</p></div>
+  <div class="top"><h2>Three live passes. Created in this room.</h2><p class="sub">Generated via PassQR MCP — scan on slide 5 to trigger a real wallet update</p></div>
   <div class="passes">
     <div class="wallet-pass pass-owner">
       <div class="pass-front">
         <div class="pass-header"><div class="pass-logo">Aiphone Residences</div><div class="pass-tier">Owner</div></div>
         <div class="pass-name">Mr. David Tan</div><div class="pass-unit">Unit 12-08 · Lot B1-28</div>
-        <div class="pass-qr" id="qr-owner"></div>
-        <div class="pass-code">PASS-FNEBCPT9</div>
+        <div class="pass-qr" id="qr-owner"></div><div class="pass-code">PASS-FNEBCPT9</div>
       </div>
       <div class="pass-back">
         <div class="pass-back-row"><span class="pass-back-label">Building</span><span class="pass-back-val">The Aiphone Residences</span></div>
         <div class="pass-back-row"><span class="pass-back-label">Gates</span><span class="pass-back-val" style="font-size:10px">Main · Car Park · Gym · BBQ</span></div>
         <div class="pass-back-row"><span class="pass-back-label">Valid until</span><span class="pass-back-val">18 Apr 2027</span></div>
-        <div class="pass-back-row"><span class="pass-back-label">Last entry</span><span class="pass-back-val" style="font-size:10px" id="last-entry-owner">—</span></div>
+        <div class="pass-back-row"><span class="pass-back-label">Last entry</span><span class="pass-back-val" id="last-entry-owner">—</span></div>
       </div>
     </div>
     <div class="wallet-pass pass-tenant">
       <div class="pass-front">
         <div class="pass-header"><div class="pass-logo">Aiphone Residences</div><div class="pass-tier">Tenant</div></div>
         <div class="pass-name">Ms. Priya Nair</div><div class="pass-unit">Unit 07-03 · Lease to Mar 2027</div>
-        <div class="pass-qr" id="qr-tenant"></div>
-        <div class="pass-code">PASS-DJSQ8X89</div>
+        <div class="pass-qr" id="qr-tenant"></div><div class="pass-code">PASS-DJSQ8X89</div>
       </div>
       <div class="pass-back">
         <div class="pass-back-row"><span class="pass-back-label">Building</span><span class="pass-back-val">The Aiphone Residences</span></div>
@@ -309,8 +292,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
       <div class="pass-front">
         <div class="pass-header"><div class="pass-logo">Aiphone Residences</div><div class="pass-tier">Visitor</div></div>
         <div class="pass-name">Yusuf Ibrahim</div><div class="pass-unit">Guest of Unit 12-08 · Today only</div>
-        <div class="pass-qr" id="qr-visitor"></div>
-        <div class="pass-code">PASS-GXVKSEQW</div>
+        <div class="pass-qr" id="qr-visitor"></div><div class="pass-code">PASS-GXVKSEQW</div>
       </div>
       <div class="pass-back">
         <div class="pass-back-row"><span class="pass-back-label">Access window</span><span class="pass-back-val">18 Apr, 2pm–6pm</span></div>
@@ -322,33 +304,26 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S5 GATE SCANNER — tap to simulate scan -->
-<div class="slide" id="s5">
-  <div class="s5-inner">
-    <h2>Gate scanner — live demonstration</h2>
-    <p class="sub">Tap a resident card below to simulate a gate scan. Validates against PassQR API and pushes a wallet update in real time.</p>
-    <div class="tap-row">
-      <button class="tap-pass tap-owner" onclick="doScan('PASS-FNEBCPT9')">
-        <span class="tp-badge">Owner</span>
-        <div class="tp-name">Mr. David Tan</div>
-        <div class="tp-unit">Unit 12-08 · Main Gate + Car Park + Gym</div>
-        <div class="tp-cta"><span class="tp-dot"></span> Tap to scan pass</div>
-      </button>
-      <button class="tap-pass tap-tenant" onclick="doScan('PASS-DJSQ8X89')">
-        <span class="tp-badge">Tenant</span>
-        <div class="tp-name">Ms. Priya Nair</div>
-        <div class="tp-unit">Unit 07-03 · Main Gate + Car Park</div>
-        <div class="tp-cta"><span class="tp-dot"></span> Tap to scan pass</div>
-      </button>
-      <button class="tap-pass tap-visitor" onclick="doScan('PASS-GXVKSEQW')">
-        <span class="tp-badge">Visitor</span>
-        <div class="tp-name">Yusuf Ibrahim</div>
-        <div class="tp-unit">Guest of 12-08 · Main Gate Only · Today</div>
-        <div class="tp-cta"><span class="tp-dot"></span> Tap to scan pass</div>
-      </button>
-    </div>
-    <div class="s5-note">
-      Each tap calls the <strong>PassQR validate API</strong>, writes <strong>last_entry</strong> to the pass data blob, and triggers a <strong>live wallet push</strong> to the holder's Apple or Google Wallet — exactly what happens at a real gate.
+<!-- S5 CAMERA SCANNER -->
+<div class="slide" id="s5" style="padding:0">
+  <div class="scan-wrap">
+    <video id="scan-video" autoplay playsinline muted onclick="tapFocus()"></video>
+    <canvas id="scan-canvas"></canvas>
+    <div class="scan-ui">
+      <div class="scan-frame">
+        <div class="c tl"></div><div class="c tr"></div>
+        <div class="c bl"></div><div class="c br"></div>
+        <div class="scan-line" id="scan-line"></div>
+      </div>
+      <div class="scan-lbl" id="scan-lbl">Point camera at a pass QR code</div>
+      <div class="scan-status" id="scan-status">camera off</div>
+      <button id="scan-btn" onclick="toggleScanner()">Start Scanner</button>
+      <!-- Small pill fallback — unobtrusive, for demo-day glare situations -->
+      <div class="fallback-row">
+        <button class="fallback-pill" onclick="doScan('PASS-FNEBCPT9')">Owner</button>
+        <button class="fallback-pill" onclick="doScan('PASS-DJSQ8X89')">Tenant</button>
+        <button class="fallback-pill" onclick="doScan('PASS-GXVKSEQW')">Visitor</button>
+      </div>
     </div>
   </div>
 </div>
@@ -356,7 +331,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 <!-- RESULT OVERLAY -->
 <div id="result-overlay">
   <div class="rcard">
-    <div class="rcard-head"><div class="rdot valid"></div><div class="rtitle" id="r-title">✓  Access Granted</div></div>
+    <div class="rcard-head"><div class="rdot valid"></div><div class="rtitle">✓  Access Granted</div></div>
     <div class="rcard-body">
       <div class="rrow"><span class="rlbl">Pass code</span><span class="rval rcode" id="r-code">—</span></div>
       <div class="rrow"><span class="rlbl">Holder</span><span class="rval" id="r-holder">—</span></div>
@@ -377,7 +352,6 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S6 API RESULT -->
 <div class="slide" id="s6">
   <div class="col">
     <h2>Gate validation — live API result.</h2>
@@ -408,23 +382,17 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
         <div class="gstep done"><div class="gstep-icon">✓</div><div class="gstep-txt">IXW-MA relay pulsed → gate opens</div></div>
         <div class="gstep done"><div class="gstep-icon">✓</div><div class="gstep-txt">update_pass writes last_entry to pass data</div></div>
         <div class="gstep active"><div class="gstep-icon">📲</div><div class="gstep-txt">PassQR pushes diff to Apple &amp; Google Wallet</div></div>
-        <div class="gstep gstep-idle"><div class="gstep-icon" style="background:rgba(255,255,255,.05)">📱</div><div class="gstep-txt">Resident's wallet shows updated pass</div></div>
+        <div class="gstep" style="background:rgba(255,255,255,.02)"><div class="gstep-icon" style="background:rgba(255,255,255,.05)">📱</div><div class="gstep-txt">Resident's wallet shows updated pass</div></div>
       </div>
       <div style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid rgba(255,255,255,.06);font-size:11px;color:var(--white3);text-align:center">Resident sees "Last entry: Main Gate · 23:33" on their lock screen — without opening any app.</div>
     </div>
   </div>
 </div>
 
-<!-- S7 PITCH -->
 <div class="slide" id="s7">
   <div class="pitch-wrap">
     <div class="pitch-label">30-second elevator pitch · For Aiphone Country Manager</div>
-    <div class="pitch-text">
-      "You have <span class="hl">Aiphone IXG in hundreds of Singapore condominiums</span>. Every resident still carries a plastic card. We fix that — software only, no hardware change.<br><br>
-      We put a <span class="hl2">digital wallet pass on every resident's phone</span> — Apple Wallet, Google Wallet — bridged to your existing relay. Every time they scan at the gate, <span class="hl">their pass updates live on their lock screen</span>. Full audit trail, automatic expiry, zero card printing.<br><br>
-      We want to run a <span class="hl2">co-branded pilot at one condo — at our cost.</span> You get a reference site, we handle the integration, you earn recurring software revenue on top of your hardware.<br><br>
-      <em>Which of your installed-base condos should we start with?</em>"
-    </div>
+    <div class="pitch-text">"You have <span class="hl">Aiphone IXG in hundreds of Singapore condominiums</span>. Every resident still carries a plastic card. We fix that — software only, no hardware change.<br><br>We put a <span class="hl2">digital wallet pass on every resident's phone</span> — Apple Wallet, Google Wallet — bridged to your existing relay. Every time they scan at the gate, <span class="hl">their pass updates live on their lock screen</span>. Full audit trail, automatic expiry, zero card printing.<br><br>We want to run a <span class="hl2">co-branded pilot at one condo — at our cost.</span> You get a reference site, we handle the integration, you earn recurring software revenue on top of your hardware.<br><br><em>Which of your installed-base condos should we start with?</em>"</div>
     <div class="cta">
       <button class="cta-btn cta-primary" onclick="startPitchTimer()">▶ Start 30s timer</button>
       <button class="cta-btn cta-secondary" onclick="goSlide(0)">Back to start</button>
@@ -433,33 +401,14 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S8 COMMERCIAL -->
 <div class="slide" id="s8">
   <div class="top"><h2>Commercial model</h2><p class="sub">Revenue flows to Aiphone, dasecure, and PassQR</p></div>
   <div class="cols">
-    <div class="col">
-      <div class="col-icon">🔧</div><h3>Setup &amp; Integration</h3>
-      <div class="price">S$4,000–8,000 <span>/ site</span></div>
-      <p>Hardware (QR scanners + IXW-MA relays), middleware, template design, staff training.</p>
-      <ul><li>QR scanners per entry point</li><li>IXW-MA relay configuration</li><li>PassQR template branding</li><li>PDPA compliance pack</li></ul>
-    </div>
-    <div class="col featured">
-      <div class="col-icon">📅</div><h3>Monthly SaaS per unit</h3>
-      <div class="price">S$3–5 <span>/ unit / month</span></div>
-      <p>Billed to MCST. PassQR + middleware hosting + support. Aiphone earns a referral cut.</p>
-      <ul><li>Pass issuance &amp; live updates</li><li>Middleware hosting + monitoring</li><li>Audit logs &amp; analytics</li><li>Visitor pass self-service</li></ul>
-    </div>
-    <div class="col">
-      <div class="col-icon">🤝</div><h3>Managed Service</h3>
-      <div class="price">S$500–800 <span>/ month</span></div>
-      <p>dasecure manages all pass issuance, move-in/out, and monthly audit reporting.</p>
-      <ul><li>Move-in/out pass management</li><li>Visitor pass support</li><li>Monthly security audit report</li><li>Annual PDPA review</li></ul>
-    </div>
+    <div class="col"><div class="col-icon">🔧</div><h3>Setup &amp; Integration</h3><div class="price">S$4,000–8,000 <span>/ site</span></div><p>Hardware (QR scanners + IXW-MA relays), middleware, template design, staff training.</p><ul><li>QR scanners per entry point</li><li>IXW-MA relay configuration</li><li>PassQR template branding</li><li>PDPA compliance pack</li></ul></div>
+    <div class="col featured"><div class="col-icon">📅</div><h3>Monthly SaaS per unit</h3><div class="price">S$3–5 <span>/ unit / month</span></div><p>Billed to MCST. PassQR + middleware hosting + support. Aiphone earns a referral cut.</p><ul><li>Pass issuance &amp; live updates</li><li>Middleware hosting + monitoring</li><li>Audit logs &amp; analytics</li><li>Visitor pass self-service</li></ul></div>
+    <div class="col"><div class="col-icon">🤝</div><h3>Managed Service</h3><div class="price">S$500–800 <span>/ month</span></div><p>dasecure manages all pass issuance, move-in/out, and monthly audit reporting.</p><ul><li>Move-in/out pass management</li><li>Visitor pass support</li><li>Monthly security audit report</li><li>Annual PDPA review</li></ul></div>
   </div>
-  <div class="mrr-box">
-    <div class="mrr-lbl">Example: 250-unit condo at S$4/unit/month</div>
-    <div class="mrr-val">S$1,000 MRR per site — scales with every condo onboarded</div>
-  </div>
+  <div class="mrr-box"><div class="mrr-lbl">Example: 250-unit condo at S$4/unit/month</div><div class="mrr-val">S$1,000 MRR per site — scales with every condo onboarded</div></div>
 </div>
 
 </div><!-- /deck -->
@@ -482,6 +431,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 /* ── SLIDES ── */
 let current=0;const TOTAL=8;let timerInterval=null;
 function goSlide(n){
+  if(current===4&&n!==4)stopScanner();
   document.querySelectorAll('.slide')[current].classList.remove('active');
   document.querySelectorAll('.nav-dot')[current].classList.remove('active');
   current=n;
@@ -498,7 +448,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'){e.preventDefault();prevSlide();}
 });
 
-/* ── QR CODES (decorative on slide 4) ── */
+/* ── QR CODES ── */
 window.addEventListener('load',()=>{
   new QRCode(document.getElementById('qr-owner'),  {text:'PASS-FNEBCPT9',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
   new QRCode(document.getElementById('qr-tenant'), {text:'PASS-DJSQ8X89',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
@@ -518,18 +468,90 @@ const PASSES={
     baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
 };
 
-/* ── TAP TO SCAN ── */
+/* ── CAMERA SCANNER ── */
+let stream=null,rafId=null,scanning=false,blocked=false;
+const video=document.getElementById('scan-video');
+const canvas=document.getElementById('scan-canvas');
+const ctx=canvas.getContext('2d');
+const scanLine=document.getElementById('scan-line');
+const statusEl=document.getElementById('scan-status');
+const lblEl=document.getElementById('scan-lbl');
+const btnEl=document.getElementById('scan-btn');
+
+async function toggleScanner(){if(scanning){stopScanner();}else{await startScanner();}}
+
+async function startScanner(){
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}});
+    video.srcObject=stream; await video.play();
+    // Request continuous autofocus
+    try{const t=stream.getVideoTracks()[0];const c=t.getCapabilities?t.getCapabilities():{};if(c.focusMode&&c.focusMode.includes('continuous'))await t.applyConstraints({advanced:[{focusMode:'continuous'}]});}catch(e){}
+    scanning=true;blocked=false;
+    statusEl.textContent='scanning…';
+    lblEl.innerHTML='Point at pass QR · <span style="color:var(--blue2);cursor:pointer;text-decoration:underline;pointer-events:all" onclick="tapFocus()">tap to focus</span>';
+    btnEl.textContent='Stop Scanner';btnEl.classList.add('stop');
+    scanLine.classList.remove('paused');
+    requestAnimationFrame(scanFrame);
+  }catch(err){statusEl.textContent='camera error';lblEl.textContent=err.message;}
+}
+
+async function tapFocus(){
+  if(!stream)return;
+  try{
+    const t=stream.getVideoTracks()[0];const c=t.getCapabilities?t.getCapabilities():{};
+    if(c.focusMode&&c.focusMode.includes('manual')){
+      await t.applyConstraints({advanced:[{focusMode:'manual'}]});
+      setTimeout(async()=>{try{await t.applyConstraints({advanced:[{focusMode:'continuous'}]});}catch(e){}},600);
+    }else{
+      const s=t.getSettings();t.stop();
+      const ns=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:s.width||1280},height:{ideal:s.height||720}}});
+      stream=ns;video.srcObject=ns;await video.play();
+    }
+  }catch(e){}
+}
+
+function stopScanner(){
+  scanning=false;
+  if(rafId){cancelAnimationFrame(rafId);rafId=null;}
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  video.srcObject=null;
+  statusEl.textContent='camera off';
+  lblEl.innerHTML='Point camera at a pass QR code';
+  btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');
+  scanLine.classList.add('paused');
+}
+
+function scanFrame(){
+  if(!scanning)return;
+  if(blocked){rafId=requestAnimationFrame(scanFrame);return;}
+  if(video.readyState!==video.HAVE_ENOUGH_DATA){rafId=requestAnimationFrame(scanFrame);return;}
+
+  const vw=video.videoWidth,vh=video.videoHeight;
+  // Crop to central 45% — QR fills much more of the analyzed area
+  const cr=0.45,cw=Math.floor(vw*cr),ch=Math.floor(vh*cr);
+  const cx=Math.floor((vw-cw)/2),cy=Math.floor((vh-ch)/2);
+  canvas.width=cw;canvas.height=ch;
+  ctx.drawImage(video,cx,cy,cw,ch,0,0,cw,ch);
+
+  const img=ctx.getImageData(0,0,cw,ch);
+  // attemptBoth handles both dark-on-light AND light-on-dark QR codes
+  const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
+  if(code&&code.data){
+    const val=code.data.trim().toUpperCase();
+    if(PASSES[val]){blocked=true;scanLine.classList.add('paused');statusEl.textContent='scanned ✓';doScan(val);return;}
+  }
+  rafId=requestAnimationFrame(scanFrame);
+}
+
+/* ── SCAN HANDLER (shared by camera + fallback pills) ── */
 const SCAN_ENDPOINT='https://passqr-scan.vincent-513.workers.dev/scan';
 
 async function doScan(code){
-  const pass=PASSES[code];
-  if(!pass)return;
+  const pass=PASSES[code];if(!pass)return;
   const now=new Date();
   const ts=now.toLocaleDateString('en-SG',{day:'2-digit',month:'short',year:'numeric'})+' · '+now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' SGT';
   const elapsed=Math.round(280+Math.random()*90);
 
-  // Populate result card
-  document.getElementById('r-title').textContent='✓  Access Granted';
   document.getElementById('r-code').textContent=code;
   document.getElementById('r-holder').textContent=pass.holder;
   document.getElementById('r-unit').textContent=`Unit ${pass.unit} · ${pass.tier}`;
@@ -537,61 +559,47 @@ async function doScan(code){
   document.getElementById('r-relay').textContent=pass.relay;
   document.getElementById('r-time').textContent=elapsed+'ms';
   document.getElementById('r-ts').textContent=ts;
-  const badge=document.getElementById('r-badge');
-  badge.className='rbadge '+pass.tiercls;
-  badge.textContent=pass.tier;
+  const badge=document.getElementById('r-badge');badge.className='rbadge '+pass.tiercls;badge.textContent=pass.tier;
 
   setPushState('loading','Updating wallet pass…','Writing last_entry · pushing to Apple &amp; Google Wallet');
   document.getElementById('result-overlay').classList.add('visible');
 
-  // Update last entry label on slide 4
   if(pass.lastEntryEl){
-    const timeStr=now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById(pass.lastEntryEl).textContent=`Main Gate · ${timeStr} SGT`;
+    const t=now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById(pass.lastEntryEl).textContent=`Main Gate · ${t} SGT`;
   }
 
-  // Fire real API update
   try{
     const res=await fetch(SCAN_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,holderName:pass.baseName,gate:'Main Gate'})});
     const data=await res.json();
-    if(res.ok&&data.success!==false){
-      setPushState('done','✓ Wallet updated','last_entry pushed to Apple &amp; Google Wallet');
-    }else{
-      const msg=data.error?.message||data.error||JSON.stringify(data).slice(0,80);
-      setPushState('err','Push error — '+msg.slice(0,60),msg);
-    }
-  }catch(e){
-    setPushState('err','Network error','Could not reach passqr-scan worker: '+e.message.slice(0,60));
-  }
+    if(res.ok&&data.success!==false)setPushState('done','✓ Wallet updated','last_entry pushed to Apple &amp; Google Wallet');
+    else setPushState('err','Push error',(data.error?.message||JSON.stringify(data)).slice(0,80));
+  }catch(e){setPushState('err','Network error',e.message.slice(0,80));}
 }
 
-function setPushState(state,title,detail){
-  const strip=document.getElementById('push-strip');
-  const spin=document.getElementById('pspin');
-  const ptitle=document.getElementById('p-title');
-  const pdetail=document.getElementById('p-detail');
+function setPushState(s,title,detail){
+  const strip=document.getElementById('push-strip'),spin=document.getElementById('pspin');
+  document.getElementById('p-title').textContent=title;document.getElementById('p-detail').innerHTML=detail;
   strip.className='push-strip';
-  if(state==='loading'){spin.className='pspin';spin.textContent='';ptitle.textContent=title;pdetail.innerHTML=detail;}
-  else if(state==='done'){strip.classList.add('done');spin.className='pspin done';spin.textContent='📲';ptitle.textContent=title;pdetail.innerHTML=detail;}
-  else{strip.classList.add('err');spin.className='pspin done';spin.textContent='⚠';ptitle.textContent=title;pdetail.innerHTML=detail;}
+  if(s==='loading'){spin.className='pspin';spin.textContent='';}
+  else if(s==='done'){strip.classList.add('done');spin.className='pspin done';spin.textContent='📲';}
+  else{strip.classList.add('err');spin.className='pspin done';spin.textContent='⚠';}
 }
 
 function dismissResult(){
   document.getElementById('result-overlay').classList.remove('visible');
+  // Resume scanning after dismiss
+  if(scanning){blocked=false;scanLine.classList.remove('paused');statusEl.textContent='scanning…';}
 }
 
 /* ── PITCH TIMER ── */
 function startPitchTimer(){
   if(timerInterval)clearInterval(timerInterval);
-  const fill=document.getElementById('timer-fill');
-  const label=document.getElementById('timer-label');
-  const MS=30000;const start=Date.now();
-  fill.style.width='0%';fill.style.background='var(--gold)';label.textContent='30s';
+  const fill=document.getElementById('timer-fill'),label=document.getElementById('timer-label');
+  const MS=30000,start=Date.now();fill.style.width='0%';fill.style.background='var(--gold)';label.textContent='30s';
   timerInterval=setInterval(()=>{
-    const e=Date.now()-start;
-    fill.style.width=Math.min(100,(e/MS)*100)+'%';
-    const r=Math.max(0,Math.ceil((MS-e)/1000));
-    label.textContent=r+'s';
+    const e=Date.now()-start;fill.style.width=Math.min(100,(e/MS)*100)+'%';
+    const r=Math.max(0,Math.ceil((MS-e)/1000));label.textContent=r+'s';
     if(e>=MS){clearInterval(timerInterval);label.textContent='Done ✓';fill.style.background='#22c55e';}
   },100);
 }

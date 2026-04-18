@@ -95,27 +95,18 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 .pass-visitor .pass-tier{background:rgba(245,158,11,.15);color:#fcd34d;border:.5px solid rgba(245,158,11,.3)}
 .pass-visitor .pass-logo{color:#fcd34d}
 
-/* ── S5 SCANNER ── */
+/* ── S5 SCANNER ──
+   Architecture: html5-qrcode runs invisibly off-screen (handles detection).
+   We display our own <video> element piped from the same camera stream.
+   This gives us 100% layout control with no library interference. */
 #s5{background:#050d1a;padding:0;overflow:hidden}
-/* scan-wrap is the positioning root — no flex, just relative */
 .scan-wrap{position:relative;width:100%;height:100%}
-
-/* Force qr-box to fill the entire slide.
-   html5-qrcode sets position:relative + explicit px widths inline.
-   !important wins over those inline styles. */
-#qr-box{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
-#qr-box__scan_region{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:none!important;box-shadow:none!important}
-
-/* Video covers full background */
-#qr-box video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:.65!important}
-
-/* Kill ALL html5-qrcode visual chrome — the shaded overlay, border images, dashboard */
-#qr-box__scan_region>:not(video){display:none!important}
-#qr-box__dashboard{display:none!important}
-
-/* Our overlay — absolutely centred on top of the camera */
-.scan-ui{position:absolute!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;z-index:10;display:flex;flex-direction:column;align-items:center;gap:1.2rem;pointer-events:none;width:100%}
-
+/* html5-qrcode detection engine — completely off-screen, invisible */
+#qr-engine{position:absolute;left:-9999px;top:0;width:100vw;height:100vh;opacity:0;pointer-events:none;z-index:-1}
+/* Our own camera feed — full bleed background */
+#scan-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.65}
+/* Scanner frame UI — perfectly centred absolute overlay */
+.scan-ui{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:1.2rem;pointer-events:none;width:100%}
 .scan-frame{width:260px;height:260px;position:relative}
 .scan-frame .c{position:absolute;width:34px;height:34px;border-color:var(--blue2);border-style:solid}
 .scan-frame .c.tl{top:0;left:0;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
@@ -318,10 +309,14 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   </div>
 </div>
 
-<!-- S5 CAMERA SCANNER -->
+<!-- S5: html5-qrcode engine hidden off-screen, our video visible -->
 <div class="slide" id="s5" style="padding:0">
   <div class="scan-wrap">
-    <div id="qr-box"></div>
+    <!-- Detection engine — invisible, off-screen -->
+    <div id="qr-engine"></div>
+    <!-- Our camera display — full bleed, perfectly controlled -->
+    <video id="scan-video" autoplay playsinline muted></video>
+    <!-- Our overlay UI — absolutely centred -->
     <div class="scan-ui">
       <div class="scan-frame">
         <div class="c tl"></div><div class="c tr"></div>
@@ -463,44 +458,85 @@ window.addEventListener('load',()=>{
   new QRCode(document.getElementById('qr-tenant'), {text:'PASS-DJSQ8X89',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
   new QRCode(document.getElementById('qr-visitor'),{text:'PASS-GXVKSEQW',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 });
+
 const PASSES={
   'PASS-FNEBCPT9':{code:'PASS-FNEBCPT9',holder:'Mr. David Tan',unit:'12-08',tier:'Owner',tiercls:'tier-owner',gates:'Main Gate · Car Park · Gym · BBQ Pit',relay:'Triggered — gate open 5s',baseName:'Mr. David Tan — Unit 12-08 (Owner)',lastEntryEl:'last-entry-owner'},
   'PASS-DJSQ8X89':{code:'PASS-DJSQ8X89',holder:'Ms. Priya Nair',unit:'07-03',tier:'Tenant',tiercls:'tier-tenant',gates:'Main Gate · Car Park',relay:'Triggered — gate open 5s',baseName:'Ms. Priya Nair — Unit 07-03 (Tenant)',lastEntryEl:'last-entry-tenant'},
   'PASS-GXVKSEQW':{code:'PASS-GXVKSEQW',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',gates:'Main Gate Only',relay:'Triggered — gate open 5s',baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
 };
-let scanner=null,scanning=false,blocked=false;
-const scanLine=document.getElementById('scan-line'),statusEl=document.getElementById('scan-status'),lblEl=document.getElementById('scan-lbl'),btnEl=document.getElementById('scan-btn');
+
+/* ── SCANNER
+   html5-qrcode runs in #qr-engine (off-screen).
+   After start(), we grab its camera stream and pipe it to #scan-video.
+   Result: clean visual layout we control 100%, reliable detection by h5q. */
+let scanner=null, scanning=false, blocked=false;
+const scanLine=document.getElementById('scan-line');
+const statusEl=document.getElementById('scan-status');
+const lblEl=document.getElementById('scan-lbl');
+const btnEl=document.getElementById('scan-btn');
+const displayVideo=document.getElementById('scan-video');
+
 async function toggleScanner(){if(scanning){await stopScanner();}else{await startScanner();}}
+
 async function startScanner(){
   try{
-    scanner=new Html5Qrcode('qr-box');blocked=false;
+    scanner=new Html5Qrcode('qr-engine');
+    blocked=false;
+
     await scanner.start(
       {facingMode:'environment'},
-      {fps:15,qrbox:{width:260,height:260},aspectRatio:window.innerWidth/window.innerHeight,disableFlip:false},
+      {fps:15, qrbox:{width:260,height:260}},
       (decodedText)=>{
         if(blocked)return;
         const code=decodedText.trim().toUpperCase();
-        if(PASSES[code]){blocked=true;scanLine.classList.add('paused');statusEl.textContent='scanned ✓';doScan(code);}
+        if(PASSES[code]){
+          blocked=true;
+          scanLine.classList.add('paused');
+          statusEl.textContent='scanned ✓';
+          doScan(code);
+        }
       },
       ()=>{}
     );
-    scanning=true;statusEl.textContent='scanning…';
+
+    // Pipe html5-qrcode's hidden camera stream → our visible video
+    const engineVideo=document.querySelector('#qr-engine video');
+    if(engineVideo&&engineVideo.srcObject){
+      displayVideo.srcObject=engineVideo.srcObject;
+    }
+
+    scanning=true;
+    statusEl.textContent='scanning…';
     lblEl.innerHTML='Point at pass QR · <span style="color:var(--blue2);cursor:pointer;text-decoration:underline;pointer-events:all" onclick="restartScan()">restart</span>';
-    btnEl.textContent='Stop Scanner';btnEl.classList.add('stop');scanLine.classList.remove('paused');
+    btnEl.textContent='Stop Scanner';btnEl.classList.add('stop');
+    scanLine.classList.remove('paused');
+
   }catch(err){
-    scanning=false;statusEl.textContent='camera error';
+    scanning=false;
+    statusEl.textContent='camera error';
     lblEl.textContent=err?.message||'Could not start camera';
     btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');
   }
 }
+
 async function stopScanner(){
   try{if(scanner&&scanner.isScanning)await scanner.stop();if(scanner){scanner.clear();scanner=null;}}catch(e){}
-  scanning=false;blocked=false;statusEl.textContent='camera off';
+  displayVideo.srcObject=null;
+  scanning=false;blocked=false;
+  statusEl.textContent='camera off';
   lblEl.innerHTML='Point camera at a pass QR code';
-  btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');scanLine.classList.add('paused');
+  btnEl.textContent='Start Scanner';btnEl.classList.remove('stop');
+  scanLine.classList.add('paused');
 }
-async function restartScan(){await stopScanner();await new Promise(r=>setTimeout(r,400));await startScanner();}
+
+async function restartScan(){
+  await stopScanner();
+  await new Promise(r=>setTimeout(r,400));
+  await startScanner();
+}
+
 const SCAN_ENDPOINT='https://passqr-scan.vincent-513.workers.dev/scan';
+
 async function doScan(code){
   const pass=PASSES[code];if(!pass)return;
   const now=new Date();
@@ -524,6 +560,7 @@ async function doScan(code){
     else setPushState('err','Push error',(data.error?.message||JSON.stringify(data)).slice(0,80));
   }catch(e){setPushState('err','Network error',e.message.slice(0,80));}
 }
+
 function setPushState(s,title,detail){
   const strip=document.getElementById('push-strip'),spin=document.getElementById('pspin');
   document.getElementById('p-title').textContent=title;document.getElementById('p-detail').innerHTML=detail;
@@ -532,10 +569,12 @@ function setPushState(s,title,detail){
   else if(s==='done'){strip.classList.add('done');spin.className='pspin done';spin.textContent='📲';}
   else{strip.classList.add('err');spin.className='pspin done';spin.textContent='⚠';}
 }
+
 function dismissResult(){
   document.getElementById('result-overlay').classList.remove('visible');
   if(scanning){blocked=false;scanLine.classList.remove('paused');statusEl.textContent='scanning…';}
 }
+
 function startPitchTimer(){
   if(timerInterval)clearInterval(timerInterval);
   const fill=document.getElementById('timer-fill'),label=document.getElementById('timer-label');

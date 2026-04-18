@@ -231,9 +231,9 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
   <div class="col">
     <h2>Singapore condos still run on plastic.</h2>
     <div class="pain-item"><div class="pain-icon">💳</div><div class="pain-text"><h4>$8–15 per key card, every tenant, every year</h4><p>Replacements, duplicates, move-outs — thousands per condo annually.</p></div></div>
-    <div class="pain-item"><div class="pain-icon">📞</div><div class="pain-text"><h4>Security desk handles all visitor access manually</h4><p>Every delivery, every guest — a phone call, a log book, a guard’s time.</p></div></div>
+    <div class="pain-item"><div class="pain-icon">📞</div><div class="pain-text"><h4>Security desk handles all visitor access manually</h4><p>Every delivery, every guest — a phone call, a log book, a guard's time.</p></div></div>
     <div class="pain-item"><div class="pain-icon">📋</div><div class="pain-text"><h4>No audit trail when an incident happens</h4><p>Who entered? When? Through which gate? Nobody knows without reviewing CCTV.</p></div></div>
-    <div class="pain-item"><div class="pain-icon">🏢</div><div class="pain-text"><h4>Aiphone’s IXG is already installed — underutilised</h4><p>The hardware is there. But no software layer connecting it to the resident’s phone.</p></div></div>
+    <div class="pain-item"><div class="pain-icon">🏢</div><div class="pain-text"><h4>Aiphone's IXG is already installed — underutilised</h4><p>The hardware is there. But no software layer connecting it to the resident's phone.</p></div></div>
   </div>
   <div class="col" style="display:flex;flex-direction:column;gap:16px;align-items:center;max-width:260px">
     <div class="stat-box"><div class="big">300+</div><p>condominiums in Singapore with Aiphone IXG installed</p><div class="big2">0</div><p>of them with digital wallet pass access today</p></div>
@@ -243,7 +243,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 <div class="slide" id="s3">
   <div class="top"><h2>One software layer. No hardware swap.</h2><p style="font-size:13px;color:var(--white3);margin-top:6px">dasecure middleware bridges PassQR to your existing Aiphone IXW-MA relay</p></div>
   <div class="flow">
-    <div class="flow-node"><div class="icon">📱</div><h4>Resident’s phone</h4><p>Apple Wallet or Google Wallet. No app to install.</p></div>
+    <div class="flow-node"><div class="icon">📱</div><h4>Resident's phone</h4><p>Apple Wallet or Google Wallet. No app to install.</p></div>
     <div class="flow-arrow"><div class="line"></div><div class="label">QR scan</div><div class="arrowhead">›</div></div>
     <div class="flow-node"><div class="icon">📷</div><h4>IP QR scanner</h4><p>Mounted at gate. Sends code to middleware via HTTP POST.</p></div>
     <div class="flow-arrow"><div class="line"></div><div class="label">validate + update</div><div class="arrowhead">›</div></div>
@@ -327,7 +327,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 
 <div id="result-overlay">
   <div class="rcard">
-    <div class="rcard-head"><div class="rdot valid"></div><div class="rtitle" id="r-title">✓  Access Granted</div></div>
+    <div class="rcard-head"><div class="rdot valid"></div><div class="rtitle" id="r-title">✓  Access Granted</div></div>
     <div class="rcard-body">
       <div class="rrow"><span class="rlbl">Pass code</span><span class="rval rcode" id="r-code">—</span></div>
       <div class="rrow"><span class="rlbl">Holder</span><span class="rval" id="r-holder">—</span></div>
@@ -381,9 +381,9 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
         <div class="gstep done"><div class="gstep-icon">✓</div><div class="gstep-txt">IXW-MA relay pulsed → gate opens</div></div>
         <div class="gstep done"><div class="gstep-icon">✓</div><div class="gstep-txt">update_pass writes last_entry to pass data</div></div>
         <div class="gstep active"><div class="gstep-icon">📲</div><div class="gstep-txt">PassQR pushes diff to Apple &amp; Google Wallet</div></div>
-        <div class="gstep" style="background:rgba(255,255,255,.02)"><div class="gstep-icon" style="background:rgba(255,255,255,.05)">📱</div><div class="gstep-txt">Resident’s wallet shows updated pass</div></div>
+        <div class="gstep" style="background:rgba(255,255,255,.02)"><div class="gstep-icon" style="background:rgba(255,255,255,.05)">📱</div><div class="gstep-txt">Resident's wallet shows updated pass</div></div>
       </div>
-      <div style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid rgba(255,255,255,.06);font-size:11px;color:var(--white3);text-align:center">Resident sees “Last entry: Main Gate · 23:33” on their lock screen — without opening any app.</div>
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid rgba(255,255,255,.06);font-size:11px;color:var(--white3);text-align:center">Resident sees "Last entry: Main Gate · 23:33" on their lock screen — without opening any app.</div>
     </div>
   </div>
 </div>
@@ -391,7 +391,7 @@ html,body{height:100%;overflow:hidden;background:var(--navy);font-family:var(--s
 <div class="slide" id="s7">
   <div class="pitch-wrap">
     <div class="pitch-label">30-second elevator pitch · For Aiphone Country Manager</div>
-    <div class="pitch-text">“You have <span class="hl">Aiphone IXG in hundreds of Singapore condominiums</span>. Every resident still carries a plastic card. We fix that — software only, no hardware change.<br><br>We put a <span class="hl2">digital wallet pass on every resident’s phone</span> — Apple Wallet, Google Wallet — bridged to your existing relay. Every time they scan at the gate, <span class="hl">their pass updates live on their lock screen</span>. Full audit trail, automatic expiry, zero card printing.<br><br>We want to run a <span class="hl2">co-branded pilot at one condo — at our cost.</span> You get a reference site, we handle the integration, you earn recurring software revenue on top of your hardware.<br><br><em>Which of your installed-base condos should we start with?</em>”</div>
+    <div class="pitch-text">"You have <span class="hl">Aiphone IXG in hundreds of Singapore condominiums</span>. Every resident still carries a plastic card. We fix that — software only, no hardware change.<br><br>We put a <span class="hl2">digital wallet pass on every resident's phone</span> — Apple Wallet, Google Wallet — bridged to your existing relay. Every time they scan at the gate, <span class="hl">their pass updates live on their lock screen</span>. Full audit trail, automatic expiry, zero card printing.<br><br>We want to run a <span class="hl2">co-branded pilot at one condo — at our cost.</span> You get a reference site, we handle the integration, you earn recurring software revenue on top of your hardware.<br><br><em>Which of your installed-base condos should we start with?</em>"</div>
     <div class="cta">
       <button class="cta-btn cta-primary" onclick="startPitchTimer()">▶ Start 30s timer</button>
       <button class="cta-btn cta-secondary" onclick="goSlide(0)">Back to start</button>
@@ -451,10 +451,14 @@ window.addEventListener('load',()=>{
   new QRCode(document.getElementById('qr-visitor'),{text:'PASS-YVG57Y5M',width:130,height:130,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 });
 
+/* PASSES — each entry has a `code` field (the real PassQR code to send to the API).
+   Old codes kept as aliases so cached-page QRs still route correctly. */
 const PASSES={
   'PASS-FNEBCPT9':{code:'PASS-FNEBCPT9',holder:'Mr. David Tan',unit:'12-08',tier:'Owner',tiercls:'tier-owner',gates:'Main Gate · Car Park · Gym · BBQ Pit',relay:'Triggered — gate open 5s',baseName:'Mr. David Tan — Unit 12-08 (Owner)',lastEntryEl:'last-entry-owner'},
   'PASS-DJSQ8X89':{code:'PASS-DJSQ8X89',holder:'Ms. Priya Nair',unit:'07-03',tier:'Tenant',tiercls:'tier-tenant',gates:'Main Gate · Car Park',relay:'Triggered — gate open 5s',baseName:'Ms. Priya Nair — Unit 07-03 (Tenant)',lastEntryEl:'last-entry-tenant'},
-  'PASS-YVG57Y5M':{code:'PASS-YVG57Y5M',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',gates:'Main Gate Only',relay:'Triggered — gate open 5s',baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
+  'PASS-YVG57Y5M':{code:'PASS-YVG57Y5M',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',gates:'Main Gate Only',relay:'Triggered — gate open 5s',baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null},
+  // Alias: old expired code → same Yusuf pass (handles cached-page QR codes)
+  'PASS-GXVKSEQW':{code:'PASS-YVG57Y5M',holder:'Yusuf Ibrahim',unit:'Guest of 12-08',tier:'Visitor',tiercls:'tier-visitor',gates:'Main Gate Only',relay:'Triggered — gate open 5s',baseName:'Yusuf Ibrahim — Guest of 12-08',lastEntryEl:null}
 };
 
 let scanner=null,scanning=false,blocked=false,autoDismissTimer=null;
@@ -517,18 +521,15 @@ function startAutoDismiss(){
   clearAutoDismiss();
   const ring=document.getElementById('dismiss-ring');
   const progress=document.getElementById('ring-progress');
-  const CIRCUMFERENCE=75.4;
-  const DURATION=4000;
+  const CIRCUMFERENCE=75.4,DURATION=4000;
   ring.style.display='block';
   progress.style.strokeDashoffset=CIRCUMFERENCE;
   let start=null;
   function tick(ts){
     if(!start)start=ts;
-    const elapsed=ts-start;
-    const frac=Math.min(elapsed/DURATION,1);
+    const frac=Math.min((ts-start)/DURATION,1);
     progress.style.strokeDashoffset=CIRCUMFERENCE*(1-frac);
-    if(frac<1){autoDismissTimer=requestAnimationFrame(tick);}
-    else{dismissResult();}
+    if(frac<1){autoDismissTimer=requestAnimationFrame(tick);}else{dismissResult();}
   }
   autoDismissTimer=requestAnimationFrame(tick);
 }
@@ -541,12 +542,14 @@ function clearAutoDismiss(){
 
 const SCAN_ENDPOINT='https://passqr-scan.vincent-513.workers.dev/scan';
 
-async function doScan(code){
-  const pass=PASSES[code];if(!pass)return;
+async function doScan(scannedCode){
+  const pass=PASSES[scannedCode];if(!pass)return;
+  // Use pass.code (the real API code), not scannedCode (may be an alias)
+  const apiCode=pass.code;
   const now=new Date();
   const ts=now.toLocaleDateString('en-SG',{day:'2-digit',month:'short',year:'numeric'})+' · '+now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' SGT';
   const elapsed=Math.round(280+Math.random()*90);
-  document.getElementById('r-code').textContent=code;
+  document.getElementById('r-code').textContent=apiCode;
   document.getElementById('r-holder').textContent=pass.holder;
   document.getElementById('r-unit').textContent=`Unit ${pass.unit} · ${pass.tier}`;
   document.getElementById('r-gates').textContent=pass.gates;
@@ -554,13 +557,13 @@ async function doScan(code){
   document.getElementById('r-time').textContent=elapsed+'ms';
   document.getElementById('r-ts').textContent=ts;
   const badge=document.getElementById('r-badge');badge.className='rbadge '+pass.tiercls;badge.textContent=pass.tier;
-  document.getElementById('r-title').textContent='✓  Access Granted';
+  document.getElementById('r-title').textContent='✓  Access Granted';
   document.querySelector('.rdot').className='rdot valid';
   setPushState('loading','Updating wallet pass…','Writing last_entry · pushing to Apple &amp; Google Wallet');
   document.getElementById('result-overlay').classList.add('visible');
   if(pass.lastEntryEl){const t=now.toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'});document.getElementById(pass.lastEntryEl).textContent=`Main Gate · ${t} SGT`;}
   try{
-    const res=await fetch(SCAN_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,holderName:pass.baseName,gate:'Main Gate'})});
+    const res=await fetch(SCAN_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:apiCode,holderName:pass.baseName,gate:'Main Gate'})});
     const data=await res.json();
     if(res.ok&&data.success!==false){
       setPushState('done','✓ Wallet updated','last_entry pushed to Apple &amp; Google Wallet');
